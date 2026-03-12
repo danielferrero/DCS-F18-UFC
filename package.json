@@ -1,0 +1,58 @@
+{
+  "name": "ufc",
+  "version": "1.0.0",
+  "description": "DCS World UFC controller",
+  "main": "electron/main.js",
+  "scripts": {
+    "dev": "concurrently \"vite\" \"wait-on http://localhost:5174 && electron .\"",
+    "build": "vite build && electron-builder",
+    "start": "electron ."
+  },
+  "build": {
+    "appId": "com.ufc.app",
+    "productName": "UFC",
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "icon": "build/icon.png"
+    },
+    "nsis": {
+      "oneClick": true,
+      "allowToChangeInstallationDirectory": false
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "Scripts",
+        "to": "Scripts"
+      }
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "electronLanguages": [
+      "en-US"
+    ]
+  },
+  "devDependencies": {
+    "@emotion/react": "^11.13.0",
+    "@emotion/styled": "^11.13.0",
+    "@mui/icons-material": "^5.16.0",
+    "@mui/material": "^5.16.0",
+    "@vitejs/plugin-react": "^4.3.0",
+    "concurrently": "^9.0.0",
+    "electron": "^33.0.0",
+    "electron-builder": "^25.0.0",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0",
+    "sass": "^1.97.3",
+    "vite": "^6.0.0",
+    "wait-on": "^8.0.0"
+  },
+  "dependencies": {}
+}

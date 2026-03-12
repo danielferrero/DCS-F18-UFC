@@ -1,0 +1,66 @@
+.app-root {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  filter: brightness(var(--brightness, 1));
+  border: 1px solid color-mix(in srgb, var(--text-color, #4caf50) 25%, transparent);
+  box-sizing: border-box;
+  position: relative;
+  animation: mfdBezelPulse 4s ease-in-out infinite;
+  box-shadow:
+    inset 0 0 30px rgba(0, 0, 0, 0.8),
+    inset 0 0 80px rgba(0, 0, 0, 0.4),
+    0 0 15px color-mix(in srgb, var(--text-color, #4caf50) 8%, transparent);
+
+  // CRT scanline overlay
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 1px,
+      rgba(0, 0, 0, 0.15) 1px,
+      rgba(0, 0, 0, 0.15) 2px
+    );
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.06;
+  }
+
+  // Vignette overlay
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.5) 100%);
+    pointer-events: none;
+    z-index: 9998;
+  }
+}
+
+@keyframes mfdBezelPulse {
+  0%,
+  100% {
+    border-color: color-mix(in srgb, var(--text-color, #4caf50) 20%, transparent);
+    box-shadow:
+      inset 0 0 30px rgba(0, 0, 0, 0.8),
+      inset 0 0 80px rgba(0, 0, 0, 0.4),
+      0 0 10px color-mix(in srgb, var(--text-color, #4caf50) 6%, transparent);
+  }
+  50% {
+    border-color: color-mix(in srgb, var(--text-color, #4caf50) 35%, transparent);
+    box-shadow:
+      inset 0 0 30px rgba(0, 0, 0, 0.8),
+      inset 0 0 80px rgba(0, 0, 0, 0.4),
+      0 0 20px color-mix(in srgb, var(--text-color, #4caf50) 12%, transparent);
+  }
+}
