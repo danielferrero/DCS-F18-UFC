@@ -314,7 +314,9 @@ export default function UFC() {
         {/* ── OSB Column ── */}
         <div className="ufc-osb-col">
           {[0, 1, 2, 3, 4].map((i) => (
-            <button key={i} className="ufc-round-btn ufc-osb" onClick={() => pressOS(i)} />
+            <div key={i} className="ufc-osb-slot">
+              <button className="ufc-round-btn ufc-osb" onClick={() => pressOS(i)} />
+            </div>
           ))}
         </div>
 

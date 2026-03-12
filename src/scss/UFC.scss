@@ -363,16 +363,21 @@
 .ufc-osb-col {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
-  gap: 6px;
+  align-items: center;
+  gap: 24px;
   width: 42px;
   flex-shrink: 0;
   margin: 0 10px;
 }
 
-.ufc-osb {
+.ufc-osb-slot {
   flex: 1;
-  max-height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ufc-osb {
   width: 42px;
   height: 42px;
 }
