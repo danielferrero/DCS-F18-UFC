@@ -12,6 +12,7 @@ const DEFAULTS = {
   dcsSavedGamesPaths: [],
   windowWidth: 750,
   windowHeight: 460,
+  theme: "stealth",
 };
 
 function loadSettings() {

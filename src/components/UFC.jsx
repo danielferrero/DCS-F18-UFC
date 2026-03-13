@@ -66,7 +66,7 @@ const FUNC_BUTTONS = [
   { label: "ILS", key: "ILS", code: CMD.ILS },
   { label: "D/L", key: "DL", code: CMD.DL },
   { label: "BCN", key: "BCN", code: CMD.BCN },
-  { label: "ON\nOFF", key: null, code: CMD.ONOFF },
+  { label: "ON\nOFF", key: null, code: CMD.ONOFF, longPress: true },
 ];
 
 export default function UFC() {
@@ -80,6 +80,7 @@ export default function UFC() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [winWidth, setWinWidth] = useState(750);
   const [winHeight, setWinHeight] = useState(460);
+  const [theme, setTheme] = useState("stealth");
 
   // Load saved window dimensions on mount
   useEffect(() => {
@@ -87,6 +88,7 @@ export default function UFC() {
     window.electronAPI.getSettings().then(({ settings }) => {
       if (settings.windowWidth) setWinWidth(settings.windowWidth);
       if (settings.windowHeight) setWinHeight(settings.windowHeight);
+      if (settings.theme) setTheme(settings.theme);
     });
   }, []);
 
@@ -94,6 +96,13 @@ export default function UFC() {
     if (!window.electronAPI?.setWindowSize) return;
     window.electronAPI.setWindowSize(winWidth, winHeight);
   }, [winWidth, winHeight]);
+
+  const applyTheme = useCallback((newTheme) => {
+    setTheme(newTheme);
+    if (window.electronAPI?.setTheme) {
+      window.electronAPI.setTheme(newTheme);
+    }
+  }, []);
 
   // ─── DCS Display Listener ────────────────────────────────────────
   useEffect(() => {
@@ -146,6 +155,14 @@ export default function UFC() {
     });
   }, []);
 
+  const sendBtnLong = useCallback((code, device = UFC_DEVICE) => {
+    if (!window.electronAPI) return;
+    window.electronAPI.sendCommand({
+      type: "commands",
+      payload: [{ device, code, delay: 600, activate: 1, addDepress: true }],
+    });
+  }, []);
+
   // Rotary encoder: +0.1 = CW (up), -0.1 = CCW (down)
   const sendRotary = useCallback((code, direction, device = UFC_DEVICE) => {
     if (!window.electronAPI) return;
@@ -171,10 +188,14 @@ export default function UFC() {
     sendBtn(CMD.ENT);
   }, [sendBtn]);
 
-  const pressMode = useCallback((key, code) => {
+  const pressMode = useCallback((key, code, longPress) => {
     if (key) setActiveMode((prev) => (prev === key ? null : key));
-    sendBtn(code);
-  }, [sendBtn]);
+    if (longPress) {
+      sendBtnLong(code);
+    } else {
+      sendBtn(code);
+    }
+  }, [sendBtn, sendBtnLong]);
 
   const pressOS = useCallback((i) => sendBtn(CMD.OS[i]), [sendBtn]);
 
@@ -212,7 +233,7 @@ export default function UFC() {
 
   // ─── Render ──────────────────────────────────────────────────────
   return (
-    <div className="ufc-panel">
+    <div className={`ufc-panel${theme !== "stealth" ? ` theme-${theme}` : ""}`}>
       {/* Drag handle */}
       <div className="ufc-top-bar">
         <span className="ufc-top-label">UFC</span>
@@ -253,6 +274,18 @@ export default function UFC() {
                   max={2160}
                   onChange={(e) => setWinHeight(parseInt(e.target.value, 10) || 300)}
                 />
+              </label>
+              <label className="ufc-settings-label">
+                THEME
+                <select
+                  className="ufc-settings-input"
+                  value={theme}
+                  onChange={(e) => applyTheme(e.target.value)}
+                >
+                  <option value="stealth">Stealth</option>
+                  <option value="hornet">Hornet</option>
+                  <option value="viper">Viper</option>
+                </select>
               </label>
               <button className="ufc-settings-apply" onClick={applyWindowSize}>APPLY</button>
             </div>
@@ -356,11 +389,11 @@ export default function UFC() {
         <div className="ufc-round-btn ufc-indicator">
           <div className="ufc-indicator-dot ufc-dot-green" />
         </div>
-        {FUNC_BUTTONS.map(({ label, key, code }) => (
+        {FUNC_BUTTONS.map(({ label, key, code, longPress }) => (
           <button
             key={label}
             className={`ufc-func-btn ${key && activeMode === key ? "active" : ""}`}
-            onClick={() => pressMode(key, code)}
+            onClick={() => pressMode(key, code, longPress)}
           >{label}</button>
         ))}
         <div className="ufc-round-btn ufc-indicator">

@@ -31,6 +31,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
   getSettings: () => ipcRenderer.invoke("get-settings"),
   setUdpPort: (port) => ipcRenderer.invoke("set-udp-port", port),
   setWindowSize: (width, height) => ipcRenderer.invoke("set-window-size", width, height),
+  setTheme: (theme) => ipcRenderer.invoke("set-theme", theme),
 
   // Hotkey status
   onHotkeyStatus: (callback) => {

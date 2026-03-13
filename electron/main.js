@@ -280,6 +280,16 @@ ipcMain.handle("set-window-size", (_event, width, height) => {
   return { success: true };
 });
 
+ipcMain.handle("set-theme", (_event, themeName) => {
+  const allowed = ["stealth", "hornet", "viper"];
+  if (!allowed.includes(themeName)) {
+    return { success: false, error: "INVALID THEME" };
+  }
+  settings.theme = themeName;
+  saveSettings(settings);
+  return { success: true };
+});
+
 // ---------------------------------------------------------------------------
 // IPC handlers — hotkey status
 // ---------------------------------------------------------------------------
