@@ -663,6 +663,20 @@
     );
     border-radius: inherit;
   }
+
+  &.ufc-opt-clickable {
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+
+    &:hover {
+      border-color: var(--ufc-display-border-hover);
+      background: rgba(var(--ufc-display-rgb), 0.06);
+    }
+
+    &:active {
+      background: rgba(var(--ufc-display-rgb), 0.12);
+    }
+  }
 }
 
 // ═══════════════════════════════════════════════════════════════════

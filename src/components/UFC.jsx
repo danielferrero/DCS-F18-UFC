@@ -356,7 +356,7 @@ export default function UFC() {
         {/* ── Option Display ── */}
         <div className="ufc-options">
           {options.map((text, i) => (
-            <div key={i} className="ufc-opt-line">
+            <div key={i} className="ufc-opt-line ufc-opt-clickable" onClick={() => pressOS(i)}>
               <span>{text}</span>
             </div>
           ))}
